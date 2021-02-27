@@ -1,0 +1,303 @@
+<link rel="stylesheet" href="css/themes/my-custom-theme.css" />
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+
+<!--homepage-->
+<div data-role="page" id="homepage"  data-theme="a">
+
+	<div data-role="header">
+		<h1>Home</h1>
+	</div><!-- /header -->
+
+	<div role="main" class="ui-content">
+		<p>this is where we put information</p>
+        
+        
+        <a href="#register" class="ui-btn">Register</a>
+        <a href="#login" class="ui-btn">Login</a>
+        
+        
+        
+	</div><!-- /content -->
+
+	<div data-role="footer">
+		<h4>Page Footer</h4>
+	</div><!-- /footer -->
+</div><!-- /page -->
+
+
+<!--registration page-->
+<div data-role="page" id="register" data-theme="b">
+
+	<div data-role="header">
+		<h1>Register</h1>
+		<a href="#homepage" class="ui-btn">Home</a>
+	</div><!-- /header -->
+
+	<div role="main" class="ui-content">
+	
+    <!--text boxes-->
+    Username <input type="text" id="username"/> <br>
+
+    E-mail <input type="text" id="email"/> <br>
+    
+    Password <input type="text" id="password"/> <br>
+
+    <button id="submitbutton"> Submit Button </button>
+    
+    
+    
+	</div><!-- /content -->
+
+	<div data-role="footer">
+		<h4>Page Footer</h4>
+	</div><!-- /footer -->
+</div><!-- /page -->
+
+
+
+<script>
+// when the submitbutton is clicked
+$( "#submitbutton" ).click(function(event) {
+  // stop the default redirect of the browser
+  event.preventDefault();
+  
+  // grab the values
+  var username = $('#username').val();
+  var email = $('#email').val();
+  var password = $('#password').val();
+  
+  var isValid = true;
+  
+  if(username == ""){
+     alert("Please enter a username");
+     isValid = false;
+  }
+  if(!email.includes("@")){
+     alert("Please enter a valid email");
+     isValid = false;
+  }
+
+ // only send the data to the database, if the param is true.
+  if(isValid == true){
+      // send the data to the server-side
+      $.post( "/putInDatabase", { username: username, email: email, password:password })
+      .done(function( data ) {
+        alert( "Data Loaded: " + data );
+      });
+  }
+  
+  
+  
+});
+
+</script>
+
+
+
+
+
+
+
+<!--Login Page-->
+<div data-role="page" id="login" data-theme="c">
+
+	<div data-role="header">
+		<h1>Login</h1>
+		<a href="#homepage" class="ui-btn">Home</a>
+	</div><!-- /header -->
+
+	<div role="main" class="ui-content">
+		<p>Page content goes here.</p>
+        
+        
+        Username <input type="text" id="loginUsername"/> <br>
+        Password <input type="text" id="loginPassword"/> <br>
+
+        
+         <button id="loginbutton"> Login Button </button>
+         
+         
+        
+	</div><!-- /content -->
+
+	<div data-role="footer">
+		<h4>Page Footer</h4>
+	</div><!-- /footer -->
+</div><!-- /page -->
+
+<script>
+// when the submitbutton is clicked
+$( "#loginbutton" ).click(function(event) {
+  // stop the default redirect of the browser
+  event.preventDefault();
+  
+  // grabbing the values
+  var un = $('#loginUsername').val();
+  var pw = $('#loginPassword').val();
+  
+  if(un == "")
+  {
+	alert ("Please enter a username");
+	}
+	
+   if(pw == "")
+  {
+	alert ("Please enter a password");
+	}
+	
+  $.post( "/checkTheLogin", { username: un, password: pw })
+      .done(function( data ) {
+	  //say what account type is
+        alert( "Data Loaded: " + data );
+		
+		if(data.includes("customer")){
+		
+	// move to the customer dashboard
+	window.location = "/#customerdash";
+	
+	}
+	else if(data.includes("driver")){
+		
+	// move to the driver dashboard
+	}
+	
+	else if(data.includes("driver")){
+		
+	// move to the manager dashboard
+	}
+	
+	
+    });
+  
+  
+ }); 
+  
+</script>
+
+<script>
+var myCart = [];
+
+</script>
+
+<!--Customer Dashboard with add to cart-->
+<div data-role="page" id="customerdash">
+
+	<div data-role="header">
+		<h1>Choose your delicious doughnuts</h1>
+	</div><!-- /header -->
+
+	<div role="main" class="ui-content">
+		<p>this is where we put information</p>
+        
+        
+ <div class="ui-field-contain">
+    <label for="select-native-2">Chocolate Doughnut</label>
+   
+<select id="chocolate_doughnut_qty" name="select-native-2" id="select-native-2" data-mini="true">
+        <option value=""></option>
+		<option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+    </select>
+<button id="addtocart" onclick="addToCart('chocolate_doughnut_qty')"> Add To Cart </button>
+
+</div>
+ <div class="ui-field-contain">
+    <label for="select-native-2">Ring Doughnut</label>
+   
+<select id="ring_doughnut_qty" name="select-native-2" id="select-native-2" data-mini="true">
+        <option value=""></option>
+		<option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+    </select>
+<button id="addtocart" onclick="addToCart('ring_doughnut_qty')"> Add To Cart </button>
+
+</div>
+        
+     <button id "goToCheckout"> Checkout </button>    
+        
+	</div><!-- /content -->
+
+	<div data-role="footer">
+		<h4>Page Footer</h4>
+	</div><!-- /footer -->
+</div><!-- /page -->
+
+<div data-role="page" id="checkoutreview" >
+
+	<div data-role="header">
+		<h1>Review your order</h1>
+		<a href="#homepage" class="ui-btn">Home</a>
+	</div><!-- /header -->
+
+	<div role="main" class="ui-content">
+		<p>Review your order</p>
+        
+        
+         <button id="insertintodb"> Complete Checkout </button>
+         
+         
+        
+	</div><!-- /content -->
+
+	<div data-role="footer">
+		<h4>Page Footer</h4>
+	</div><!-- /footer -->
+</div><!-- /page -->
+
+<script>
+ 
+ $( "#goToCheckout").clickfunction(){
+	//update div tag with the shopping cart
+	
+	var cartItems = myCart.toString().split(',');
+	
+	//wipe the products div tag first
+	$('#products').html('');
+	
+	//for each product append them to the products div
+	for (var i=0; i< cartItems.length;i++){
+	$('#products').append(cartItems[i] + '<br>')};
+	
+	// move to the checkout location
+	window.location="/#checkoutreview";
+	
+});
+
+
+function addToCart(itemName){
+    // finding out the name of the ITEM we are adding
+    var item = itemName;
+	console.log(item);
+    
+    // dynamically find out the qty
+	var qty = $('#'+item).children("option:selected").val();
+	console.log(qty);
+    
+    // search the cart and see if we already added
+    // the item. If we did, remove the old qty.
+
+    myCart.forEach(function(itemCurrent, index, array) {
+           
+           
+           
+           if(itemCurrent.includes(item)){
+              console.log("Removing previous reference to " + item);
+              myCart.pop(index);
+           }
+    });
+    
+    
+    // add the item to the cart
+    myCart.push(item + '-' + qty);
+    
+    alert(myCart);
+
+}
+
+</script></textarea>
