@@ -186,10 +186,11 @@ var myCart = [];
 
 	<div data-role="header">
 		<h1>Choose your delicious doughnuts</h1>
+		<a href="#homepage" class="ui-btn">Home</a>
 	</div><!-- /header -->
 
 	<div role="main" class="ui-content">
-		<p>this is where we put information</p>
+		<p>Choose from our delicious range of homemade doughnuts, all lovingly prepared in our on site		bakery</p>
         
         
  <div class="ui-field-contain">
@@ -219,7 +220,7 @@ var myCart = [];
 
 </div>
         
-     <button id "goToCheckout"> Checkout </button>    
+     <button id ="goToCheckout"> Checkout </button>    
         
 	</div><!-- /content -->
 
@@ -236,8 +237,10 @@ var myCart = [];
 	</div><!-- /header -->
 
 	<div role="main" class="ui-content">
-		<p>Review your order</p>
+		<p>Check your order before continuing to the payment page</p>
         
+		<div id="products">
+		</div>
         
          <button id="insertintodb"> Complete Checkout </button>
          
@@ -250,32 +253,38 @@ var myCart = [];
 	</div><!-- /footer -->
 </div><!-- /page -->
 
-<script>
+
  
- $( "#goToCheckout").clickfunction(){
+<script>
+
+ $( "#goToCheckout").click(function(){
+ 
 	//update div tag with the shopping cart
 	
 	var cartItems = myCart.toString().split(',');
 	
-	//wipe the products div tag first
-	$('#products').html('');
 	
-	//for each product append them to the products div
-	for (var i=0; i< cartItems.length;i++){
-	$('#products').append(cartItems[i] + '<br>')};
+	//for each record append them to the 'products' div	
+	for (var i=0; i<cartItems.length; i++){
+	$('#products').append(cartItems[i] + '<br>');
+	}
 	
-	// move to the checkout location
+	
+ 
+ 
+ 
+ 
+	// move to the checkout review
 	window.location="/#checkoutreview";
+	});
 	
-});
-
-
+	
 function addToCart(itemName){
     // finding out the name of the ITEM we are adding
     var item = itemName;
 	console.log(item);
     
-    // dynamically find out the qty
+    // dynamically find out the qty using jquery selector
 	var qty = $('#'+item).children("option:selected").val();
 	console.log(qty);
     
