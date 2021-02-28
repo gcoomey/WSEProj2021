@@ -4,14 +4,14 @@
 <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
 
 <!--homepage-->
-<div data-role="page" id="homepage"  data-theme="a">
+<div data-role="page" id="homepage" >
 
 	<div data-role="header">
 		<h1>Home</h1>
 	</div><!-- /header -->
 
 	<div role="main" class="ui-content">
-		<p>this is where we put information</p>
+		<p>Welcome to Dee's Doughnuts</p>
         
         
         <a href="#register" class="ui-btn">Register</a>
@@ -22,13 +22,13 @@
 	</div><!-- /content -->
 
 	<div data-role="footer">
-		<h4>Page Footer</h4>
+		<h4>Copyright GC 2021</h4>
 	</div><!-- /footer -->
 </div><!-- /page -->
 
 
 <!--registration page-->
-<div data-role="page" id="register" data-theme="b">
+<div data-role="page" id="register">
 
 	<div data-role="header">
 		<h1>Register</h1>
@@ -37,12 +37,14 @@
 
 	<div role="main" class="ui-content">
 	
-    <!--text boxes-->
+    <!--text input boxes-->
     Username <input type="text" id="username"/> <br>
 
     E-mail <input type="text" id="email"/> <br>
     
     Password <input type="text" id="password"/> <br>
+	
+	Account Type <input type="text" id="acctype"/> <br>
 
     <button id="submitbutton"> Submit Button </button>
     
@@ -51,14 +53,14 @@
 	</div><!-- /content -->
 
 	<div data-role="footer">
-		<h4>Page Footer</h4>
+		<h4>Copyright GC 2021</h4>
 	</div><!-- /footer -->
 </div><!-- /page -->
 
 
 
 <script>
-// when the submitbutton is clicked
+// when the 'submit' button is clicked
 $( "#submitbutton" ).click(function(event) {
   // stop the default redirect of the browser
   event.preventDefault();
@@ -67,6 +69,7 @@ $( "#submitbutton" ).click(function(event) {
   var username = $('#username').val();
   var email = $('#email').val();
   var password = $('#password').val();
+  var acctype = $('#acctype').val();
   
   var isValid = true;
   
@@ -79,10 +82,10 @@ $( "#submitbutton" ).click(function(event) {
      isValid = false;
   }
 
- // only send the data to the database, if the param is true.
+ // only send the data to the database, if the parameter is true.
   if(isValid == true){
-      // send the data to the server-side
-      $.post( "/putInDatabase", { username: username, email: email, password:password })
+      // send the data to the server side
+      $.post( "/putInDatabase", { username: username, email: email, password:password, acctype:acctype })
       .done(function( data ) {
         alert( "Data Loaded: " + data );
       });
@@ -101,34 +104,35 @@ $( "#submitbutton" ).click(function(event) {
 
 
 <!--Login Page-->
-<div data-role="page" id="login" data-theme="c">
+<div data-role="page" id="login" >
 
 	<div data-role="header">
-		<h1>Login</h1>
+		<h1>Log in to your account</h1>
+		
 		<a href="#homepage" class="ui-btn">Home</a>
 	</div><!-- /header -->
 
 	<div role="main" class="ui-content">
-		<p>Page content goes here.</p>
+		<p>Access your account</p>
         
         
         Username <input type="text" id="loginUsername"/> <br>
         Password <input type="text" id="loginPassword"/> <br>
 
         
-         <button id="loginbutton"> Login Button </button>
+         <button id="loginbutton"> Login </button>
          
          
         
 	</div><!-- /content -->
 
 	<div data-role="footer">
-		<h4>Page Footer</h4>
+		<h4>Copyright GC 2021</h4>
 	</div><!-- /footer -->
 </div><!-- /page -->
 
 <script>
-// when the submitbutton is clicked
+// when the 'Login' button is clicked
 $( "#loginbutton" ).click(function(event) {
   // stop the default redirect of the browser
   event.preventDefault();
@@ -155,7 +159,7 @@ $( "#loginbutton" ).click(function(event) {
 		if(data.includes("customer")){
 		
 	// move to the customer dashboard
-	window.location = "/#customerdash";
+	   window.location = "/#customerdash";
 	
 	}
 	else if(data.includes("driver")){
@@ -163,9 +167,16 @@ $( "#loginbutton" ).click(function(event) {
 	// move to the driver dashboard
 	}
 	
-	else if(data.includes("driver")){
+	else if(data.includes("manager")){
+	
+	 // make a call to the server side to get the data
+            $.get( "/getManagerData", function( data ) {
+            // display the data on the manager page
+                $( "#managerOutput" ).html( data );
+	});
 		
 	// move to the manager dashboard
+	   window.location = "/#manager";
 	}
 	
 	
@@ -225,7 +236,7 @@ var myCart = [];
 	</div><!-- /content -->
 
 	<div data-role="footer">
-		<h4>Page Footer</h4>
+		<h4>Copyright GC 2021</h4>
 	</div><!-- /footer -->
 </div><!-- /page -->
 
@@ -242,18 +253,40 @@ var myCart = [];
 		<div id="products">
 		</div>
         
-         <button id="insertintodb"> Complete Checkout </button>
+         <button id="insertintodb">Complete Checkout</button>
          
          
         
 	</div><!-- /content -->
 
 	<div data-role="footer">
-		<h4>Page Footer</h4>
+		<h4>Copyright GC 2021</h4>
 	</div><!-- /footer -->
 </div><!-- /page -->
 
+<script>
 
+$("#insertintodb").click(function() {
+		//get the customer username
+		var orderby = $('#loginUsername').val();
+	
+		
+		//get the list of products from cart
+		var items = myCart.toString();
+		 
+ 
+      $.post( "/completeCheckout", { orderby: orderby, items: items })
+      .done(function( data ) {
+        alert( "Data Loaded: " + data );
+      });
+
+
+});
+
+
+
+
+</script>
  
 <script>
 
@@ -262,6 +295,9 @@ var myCart = [];
 	//update div tag with the shopping cart
 	
 	var cartItems = myCart.toString().split(',');
+	
+	// to prevent any duplication, wipe the 'products' div
+	$('#products').html('');
 	
 	
 	//for each record append them to the 'products' div	
@@ -308,5 +344,28 @@ function addToCart(itemName){
     alert(myCart);
 
 }
+</script>
+<!--Manager Page-->
+<div data-role="page" id="manager">
 
-</script></textarea>
+	<div data-role="header">
+		<h1>Management Dashboard</h1>
+		<a href="#homepage" class="ui-btn">Home</a>
+	</div><!-- /header -->
+
+	<div role="main" class="ui-content">
+		<p>Recent customer orders</p>
+         
+     <div id ="managerOutput"> 
+
+	</div>	
+
+                      
+         
+        
+	</div><!-- /content -->
+
+	<div data-role="footer">
+		<h4>Copyright GC 2021</h4>
+	</div><!-- /footer -->
+</div><!-- /page -->

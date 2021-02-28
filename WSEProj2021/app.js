@@ -22,6 +22,49 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
+app.get('/getManagerData', function (req, res) {
+   
+   
+  // put the data in the database
+  // pulling in mysql
+  var mysql = require('mysql');
+   // set up a connection  
+  var con = mysql.createConnection({
+  host: "localhost",
+  user: "root",
+  database: "test",
+  password: ""
+  });
+  
+  
+   
+// hold the data that we going to send back.
+var output = '';
+
+
+  con.connect(function(err) {
+  if (err) throw err;
+  con.query("SELECT orderby, items FROM orders;", function (err, result, fields) {
+    if (err) throw err;
+    console.log(result);
+   
+    
+    // looping over the records
+    for(var i=0; i< result.length; i++){
+        output = output + result[i].orderby + '---' + result[i].items + '<br>';
+    }
+    
+     // return the output variable
+    res.send(output);   
+  });
+});
+
+
+  
+  
+});
+
+
 app.post('/checkTheLogin', function (req, res) {
    
    // catching the variables
@@ -58,6 +101,7 @@ app.post('/checkTheLogin', function (req, res) {
 });
 
 
+
 app.post('/putInDatabase', function (req, res) {
   
   // catching the variables
@@ -82,7 +126,45 @@ app.post('/putInDatabase', function (req, res) {
   con.connect(function(err) {
   if (err) throw err;
   console.log("Connected!");
-  var sql = "INSERT INTO `test`.`users` (`username`, `email`, `password`, `acctype`) VALUES ('"+username+"', '"+email+"', '"+pass+"', 'customer');";
+  var sql = "INSERT INTO `test`.`users` (`username`, `email`, `password`, `acctype`) VALUES ('"+username+"', '"+email+"', '"+pass+"', '"+acctype+"');";
+  console.log(sql);
+  con.query(sql, function (err, result) {
+    if (err) throw err;
+    console.log("1 record inserted");
+  });
+});
+  res.send('Data went to the database');
+  
+  
+})
+
+
+
+
+app.post('/completeCheckout', function (req, res) {
+  
+  // catching the variables
+  var orderby = req.body.orderby;
+  var items = req.body.items;
+   
+  // put the data in the database
+  // pulling in mysql
+  var mysql = require('mysql');
+
+  
+ // set up a connection  
+  var con = mysql.createConnection({
+  host: "localhost",
+  user: "root",
+  database: "test",
+  password: ""
+  });
+  
+  
+  con.connect(function(err) {
+  if (err) throw err;
+  console.log("Connected!");
+  var sql = "INSERT INTO `test`.`orders` (`orderby`, `items`) VALUES ('"+orderby+"', '"+items+"');";
   console.log(sql);
   con.query(sql, function (err, result) {
     if (err) throw err;
